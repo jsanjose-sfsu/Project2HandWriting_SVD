@@ -2,14 +2,14 @@ import numpy as np
 
 
 def informationListConversion(set, labels):
-    '''
+    """
     This is for formatting our information into lists so we can
     manipulate the data into matrices, DO NOT TOUCH; ask for johnsanjose
     for explanation on how this works.
     :param set: this is the string-ified version of the set
     :param labels: this is the string-ified version of the labels
     :return: set and label.
-    '''
+    """
     trainingSetStringList = set.split(",")
     trainingSet = []
     for i in range(0, len(trainingSetStringList)):
@@ -27,18 +27,21 @@ def informationListConversion(set, labels):
 
     trainingLabels = []
     for i in range(0, len(labelsStringList)):
-        trainingLabels.append(float(labelsStringList[i]))
+        if labelsStringList[i] == '10':
+            trainingLabels.append(float(0))
+        else:
+            trainingLabels.append(float(labelsStringList[i]))
 
     return [trainingSet, trainingLabels]
 
 def matrixSetConversion(set):
-    '''
+    """
     This function creates a set of matrices based off of the
     set file its been given. DO NOT TOUCH. Again, ask johnsanjose
     for questions.
     :param set: Set list (a list of values from the set file).
     :return: 9 numpy matrices.
-    '''
+    """
 
     ListOfMatrices = []
 
@@ -58,6 +61,24 @@ def matrixSetConversion(set):
 
     return ListOfMatrices
 
+def matrixLabelConversion(label):
+    """
+    This function creates 1x400 column vectors from the label thats been passed in.
+    :param label: test label
+    :return: 10 1x400 matrices.
+    """
+    ListOfMatrices = []
+
+    count = 0
+    for i in range(0, 10):
+        tempCol = []
+        for j in range(0, 400):
+            tempCol.append(label[count])
+            count += 1
+        tempArrayMatrix = np.matrix(tempCol)
+        ListOfMatrices.append(tempArrayMatrix)
+
+    return ListOfMatrices
 
 def main():
 
@@ -77,6 +98,7 @@ def main():
     [testSet, testLabels] = informationListConversion(stringTrainingSet, stringTestLabelsSet)
 
     A = matrixSetConversion(trainingSet)
+    b = matrixLabelConversion(trainingLabels)
 
     return 0
 
