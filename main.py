@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib as mat
 
 
 def informationListConversion(set, labels):
@@ -80,6 +81,47 @@ def matrixLabelConversion(label):
 
     return ListOfMatrices
 
+
+def testConversion(setString, labelString):
+
+    tempSetListString = setString.split(',')
+    tempSet = []
+    for i in range(0, len(tempSetListString)):
+        if '\n' in tempSetListString[i]:
+            currStringList = tempSetListString[i].split("\n")
+            for j in range(0, len(currStringList)):
+                if currStringList[j] != '':
+                    tempSet.append(float(currStringList[j]))
+        else:
+            tempSet.append(float(tempSetListString[i]))
+
+
+    count = 0
+    tempMatrixRow = []
+    for i in range(0, 1000):
+        tempMatrixCol = []
+        for j in range(0, 400):
+            tempMatrixCol.append(tempSet[count])
+            count += 1
+        tempMatrixRow.append(tempMatrixCol)
+
+    matrixTestSet = np.matrix(tempMatrixRow)
+
+    tempLabel = labelString.split('\n')
+    tempLabel.pop(len(tempLabel) - 1)
+
+    print(len(tempLabel))
+
+    colArray = []
+    for i in range(0, len(tempLabel)):
+        colArray.append(float(tempLabel[i]))
+
+    matrixTestLabel = np.matrix(colArray)
+    matrixTestLabel = matrixTestLabel.T
+
+    return matrixTestSet, matrixTestLabel
+
+
 def main():
 
     trainingSetMatrixFile = open("HandWrittenDataFiles/handwriting_training_set.txt", "r")
@@ -95,10 +137,19 @@ def main():
     stringTestLabelsSet = testLabelsFile.read()
 
     [trainingSet, trainingLabels] = informationListConversion(stringTrainingSet, stringTrainingSetLabels)
-    [testSet, testLabels] = informationListConversion(stringTrainingSet, stringTestLabelsSet)
 
+
+    [matrixTestSet, matrixTestLabels] = testConversion(stringTestSet, stringTestLabelsSet)
     A = matrixSetConversion(trainingSet)
     b = matrixLabelConversion(trainingLabels)
+
+
+    """-------------------------DO NOT TOUCH ANYTHING FROM THIS POINT-------------------------"""
+
+
+
+
+
 
     return 0
 
