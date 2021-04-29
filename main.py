@@ -83,7 +83,13 @@ def matrixLabelConversion(label):
 
 
 def testConversion(setString, labelString):
-
+    """
+    Converts test set and test label into matrices to be processed. Again do not touch, assume that
+    this function returns matrices for the test set and the test label.
+    :param setString:
+    :param labelString:
+    :return: 2 numpy matrices corresponding to testSet and testLabels.
+    """
     tempSetListString = setString.split(',')
     tempSet = []
     for i in range(0, len(tempSetListString)):
@@ -141,15 +147,16 @@ def main():
 
     [matrixTestSet, matrixTestLabels] = testConversion(stringTestSet, stringTestLabelsSet)
     A = matrixSetConversion(trainingSet)
-    b = matrixLabelConversion(trainingLabels)
+    y = matrixLabelConversion(trainingLabels)
 
 
     """-------------------------DO NOT TOUCH ANYTHING FROM THIS POINT-------------------------"""
-
-
-
-
-
+    #TODO: Perform SVD and find the corresponding z_hat for all matrices A (ten of them).
+    #NOTE: use variables, A, b, matrixTestSet, and matrixTestLabels.
+    #A is a list of 10 matrices, (400x400)
+    #b is a list of 10 column vector matrix (400x1)
+    #matrixTestSet is a matrix from the test set txt file. (1000x400)
+    #matrixTestLabel is a column matrix from test label txt file (1000x1)
 
     return 0
 
