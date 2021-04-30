@@ -85,10 +85,11 @@ def matrixLabelConversion(label):
 def testConversion(setString, labelString):
     """
     Converts test set and test label into matrices to be processed. Again do not touch, assume that
-    this function returns matrices for the test set and the test label.
+    this function returns matrices for the test set and the test label. Please ask jsanjose if changes
+    are needed.
     :param setString:
     :param labelString:
-    :return: 2 numpy matrices corresponding to testSet and testLabels.
+    :return: 2 numpy matrices corresponding to testSet (1000x400)and testLabels(1000X1).
     """
     tempSetListString = setString.split(',')
     tempSet = []
