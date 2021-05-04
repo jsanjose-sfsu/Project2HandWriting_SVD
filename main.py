@@ -1,3 +1,5 @@
+from typing import List
+
 import numpy as np
 import matplotlib as mat
 
@@ -64,7 +66,8 @@ def matrixSetConversion(set):
 
 def matrixLabelConversion(label):
     """
-    This function creates 1x400 column vectors from the label thats been passed in.
+    This function creates 1x400 column vectors from the label thats been passed in. Ask
+    jsanjose for details.
     :param label: test label
     :return: 10 1x400 matrices.
     """
@@ -104,20 +107,22 @@ def testConversion(setString, labelString):
 
 
     count = 0
-    tempMatrixRow = []
+    matrixTestSet = []
     for i in range(0, 1000):
         tempMatrixCol = []
         for j in range(0, 400):
             tempMatrixCol.append(tempSet[count])
             count += 1
-        tempMatrixRow.append(tempMatrixCol)
 
-    matrixTestSet = np.matrix(tempMatrixRow)
+        tempMatrix = np.matrix(tempMatrixCol)
+        matrixTestSet.append(tempMatrix.T)
+
+    print(len(matrixTestSet))
+
 
     tempLabel = labelString.split('\n')
     tempLabel.pop(len(tempLabel) - 1)
 
-    print(len(tempLabel))
 
     colArray = []
     for i in range(0, len(tempLabel)):
@@ -127,6 +132,20 @@ def testConversion(setString, labelString):
     matrixTestLabel = matrixTestLabel.T
 
     return matrixTestSet, matrixTestLabel
+
+def orthonormalProjection(U, y):
+    """
+    This operation represents the orthonormal projection from y->y_hat.
+    UxU.Txy = y_hat
+    :param U:
+    :param y:
+    :return:
+    """
+    U_cross_UT = np.matmul(U, U.T)
+    y_hat = np.matmul(U, y)
+
+    return y_hat
+
 
 
 def main():
@@ -158,6 +177,35 @@ def main():
     #b is a list of 10 column vector matrix (400x1)
     #matrixTestSet is a matrix from the test set txt file. (1000x400)
     #matrixTestLabel is a column matrix from test label txt file (1000x1)
+
+    '''Gathering all orthonormal matrices from A'''
+    U = []
+    y_hat = []
+    for i in range(0, len(A)):
+        [tempU, tempE, tempV] = np.linalg.svd(A[i])
+        U.append(tempU)
+
+    '''find all corresponding y_hats'''
+    #this process currently takes to long to the point my computer terminates it.
+    #for i in range(0, len(U)):
+    #    for j in range(0, len(matrixTestSet)):
+    #        y_hat.append(orthonormalProjection(U[i], matrixTestSet[j]))
+
+    z_hat = []
+    '''find all z_hats'''
+    for i in range(0, len(y)):
+        for j in range(0, len(y_hat)):
+            z_hat.append(y[i] - y_hat[j])
+
+    print("Hello")
+
+
+
+
+
+
+
+
 
     return 0
 
