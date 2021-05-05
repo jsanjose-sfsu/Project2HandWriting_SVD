@@ -185,19 +185,22 @@ def main():
         [tempU, tempE, tempV] = np.linalg.svd(A[i])
         U.append(tempU)
 
-    '''find all corresponding y_hats'''
-    #this process currently takes to long to the point my computer terminates it.
-    #for i in range(0, len(U)):
-    #    for j in range(0, len(matrixTestSet)):
-    #        y_hat.append(orthonormalProjection(U[i], matrixTestSet[j]))
 
+    #according to recent emails we should not end with 10000 y_hat vectors.
+    #this step is currently wrong.
+    '''find all corresponding y_hats'''
+    for i in range(0, len(U)):
+        for j in range(0, len(matrixTestSet)):
+            y_hat.append(orthonormalProjection(U[i], matrixTestSet[j]))
+
+    # this process currently takes to long to the point my computer terminates it.
     z_hat = []
     '''find all z_hats'''
-    for i in range(0, len(y)):
-        for j in range(0, len(y_hat)):
-            z_hat.append(y[i] - y_hat[j])
+    #for i in range(0, len(y)):
+    #    for j in range(0, len(y_hat)):
+    #        z_hat.append(y[i] - y_hat[j])
 
-    print("Hello")
+    print(len(y_hat))
 
 
 
