@@ -117,7 +117,7 @@ def testConversion(setString, labelString):
         tempMatrix = np.matrix(tempMatrixCol)
         matrixTestSet.append(tempMatrix.T)
 
-    print(len(matrixTestSet))
+    #print(len(matrixTestSet))
 
 
     tempLabel = labelString.split('\n')
@@ -128,10 +128,12 @@ def testConversion(setString, labelString):
     for i in range(0, len(tempLabel)):
         colArray.append(float(tempLabel[i]))
 
-    matrixTestLabel = np.matrix(colArray)
-    matrixTestLabel = matrixTestLabel.T
+    #matrixTestLabel = np.matrix(colArray)
+    #matrixTestLabel = matrixTestLabel.T
 
-    return matrixTestSet, matrixTestLabel
+    #return matrixTestSet, matrixTestLabel
+
+    return matrixTestSet, colArray
 
 def orthonormalProjection(U, y):
     """
@@ -164,7 +166,6 @@ def main():
 
     [trainingSet, trainingLabels] = informationListConversion(stringTrainingSet, stringTrainingSetLabels)
 
-
     [matrixTestSet, matrixTestLabels] = testConversion(stringTestSet, stringTestLabelsSet)
     A = matrixSetConversion(trainingSet)
     y = matrixLabelConversion(trainingLabels)
@@ -180,27 +181,58 @@ def main():
 
     '''Gathering all orthonormal matrices from A'''
     U = []
-    y_hat = []
     for i in range(0, len(A)):
         [tempU, tempE, tempV] = np.linalg.svd(A[i])
         U.append(tempU)
 
+    """For each test digit, compute the 10 y_hat vectors and the corresponding 10 z vectors."""
+    print(len(matrixTestLabels))
+
+    z_Mag = []
+    #for each test digit
+    for i in range(0, len(matrixTestLabels)):
+        y_hat = []
+        z_hat = []
+        #compute the 10 y_hat vectors
+        for j in range(0, len(U)):
+            y_hat.append(orthonormalProjection(U[j], matrixTestSet[j]))
+
+        #and the corresponding 10 z vectors.
+        for k in range(0, len(y_hat)):
+            z_hat.append(matrixTestSet[k] - y_hat[k])
+
+        #computing norms
+        for m in range(0, len(z_hat)):
+            magnitude_z = np.linalg.norm(z_hat[m])
+            z_Mag.append(magnitude_z)
+
+    z_Mag.sort()
+    print(z_Mag[0])
+
+
+
+
+
+
+
+
+
+
 
     #according to recent emails we should not end with 10000 y_hat vectors.
     #this step is currently wrong.
-    '''find all corresponding y_hats'''
-    for i in range(0, len(U)):
-        for j in range(0, len(matrixTestSet)):
-            y_hat.append(orthonormalProjection(U[i], matrixTestSet[j]))
+    #'''find all corresponding y_hats'''
+    #for i in range(0, len(U)):
+    #    for j in range(0, len(matrixTestSet)):
+    #        y_hat.append(orthonormalProjection(U[i], matrixTestSet[j]))
 
     # this process currently takes to long to the point my computer terminates it.
-    z_hat = []
     '''find all z_hats'''
     #for i in range(0, len(y)):
     #    for j in range(0, len(y_hat)):
     #        z_hat.append(y[i] - y_hat[j])
 
-    print(len(y_hat))
+    #print(len(y_hat))
 
 
 
