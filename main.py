@@ -117,9 +117,6 @@ def testConversion(setString, labelString):
         tempMatrix = np.matrix(tempMatrixCol)
         matrixTestSet.append(tempMatrix.T)
 
-    #print(len(matrixTestSet))
-
-
     tempLabel = labelString.split('\n')
     tempLabel.pop(len(tempLabel) - 1)
 
@@ -127,11 +124,6 @@ def testConversion(setString, labelString):
     colArray = []
     for i in range(0, len(tempLabel)):
         colArray.append(float(tempLabel[i]))
-
-    #matrixTestLabel = np.matrix(colArray)
-    #matrixTestLabel = matrixTestLabel.T
-
-    #return matrixTestSet, matrixTestLabel
 
     return matrixTestSet, colArray
 
@@ -141,31 +133,32 @@ def orthonormalProjection(U, y):
     UxU.Txy = y_hat
     :param U:
     :param y:
-    :return:
+    :return: y_hat calulated from operation described.
     """
     U_cross_UT = np.matmul(U, U.T)
     y_hat = np.matmul(U, y)
 
     return y_hat
 
-
+def approx_Equal(x, y, tolerance=0.001):
+    return abs(x-y) <= 0.5 * tolerance * (x + y)
 
 def main():
 
+    #We open the files
     trainingSetMatrixFile = open("HandWrittenDataFiles/handwriting_training_set.txt", "r")
     trainingSetLabels = open("HandWrittenDataFiles/handwriting_training_set_labels.txt", "r")
-
     testSetFile= open("HandWrittenDataFiles/handwriting_test_set.txt")
     testLabelsFile = open("HandWrittenDataFiles/handwriting_test_set_labels.txt")
 
+    #Parse them
     stringTrainingSet = trainingSetMatrixFile.read()
     stringTrainingSetLabels = trainingSetLabels.read()
-
     stringTestSet = testSetFile.read()
     stringTestLabelsSet = testLabelsFile.read()
 
+    #Convert them to usable matrices and lists
     [trainingSet, trainingLabels] = informationListConversion(stringTrainingSet, stringTrainingSetLabels)
-
     [matrixTestSet, matrixTestLabels] = testConversion(stringTestSet, stringTestLabelsSet)
     A = matrixSetConversion(trainingSet)
     y = matrixLabelConversion(trainingLabels)
@@ -174,73 +167,60 @@ def main():
     """-------------------------DO NOT TOUCH ANYTHING FROM THIS POINT-------------------------"""
     #TODO: Perform SVD and find the corresponding z_hat for all matrices A (ten of them).
     #NOTE: use variables, A, b, matrixTestSet, and matrixTestLabels.
-    #A is a list of 10 matrices, (400x400)
+    #A is a list of 10 matrices, (400x400) where we need to get U matrices by SVD.
     #b is a list of 10 column vector matrix (400x1)
-    #matrixTestSet is a matrix from the test set txt file. (1000x400)
+    #matrixTestSet is a matrix from the test set txt file. (1000x400) this is our set of y vectors
     #matrixTestLabel is a column matrix from test label txt file (1000x1)
 
     '''Gathering all orthonormal matrices from A'''
     U = []
     for i in range(0, len(A)):
+        #use of SVD and grabbing the orthogonal matrix U from current matrix A
         [tempU, tempE, tempV] = np.linalg.svd(A[i])
         U.append(tempU)
 
     """For each test digit, compute the 10 y_hat vectors and the corresponding 10 z vectors."""
-    print(len(matrixTestLabels))
-
-    z_Mag = []
+    #number of correct guesses with an adjustable tolerance
+    numCorrectGuess = 0
+    tolerance = .07
     #for each test digit
     for i in range(0, len(matrixTestLabels)):
+        z_Mag = []
         y_hat = []
         z_hat = []
         #compute the 10 y_hat vectors
         for j in range(0, len(U)):
-            y_hat.append(orthonormalProjection(U[j], matrixTestSet[j]))
+            y_hat.append(orthonormalProjection(U[j], matrixTestSet[i]))
 
         #and the corresponding 10 z vectors.
         for k in range(0, len(y_hat)):
-            z_hat.append(matrixTestSet[k] - y_hat[k])
+            z_hat.append(matrixTestSet[i] - y_hat[k])
 
         #computing norms
         for m in range(0, len(z_hat)):
             magnitude_z = np.linalg.norm(z_hat[m])
             z_Mag.append(magnitude_z)
 
-    z_Mag.sort()
-    print(z_Mag[0])
+        #grabbing the minimum which is the prediction
+        minimum = z_Mag[0]
+        for l in range(0, len(z_Mag)):
+            if(z_Mag[l] < minimum):
+                minimum = z_Mag[l]
 
+        #we now see if our prediction is correct by
+        #comparing it with the test labels.
+        print("----------------------------------------------------------")
+        print("Prediction = {} : Label = {}".format(minimum,
+                                                    matrixTestLabels[i]))
+        approximatelyAccurate = approx_Equal(minimum, matrixTestLabels[i], tolerance)
+        print("Does it approximately match?: {}".format(approximatelyAccurate))
 
+        if approximatelyAccurate:
+            numCorrectGuess += 1
 
+    print("----------------------------------------------------------\n")
 
-
-
-
-
-
-
-
-    #according to recent emails we should not end with 10000 y_hat vectors.
-    #this step is currently wrong.
-    #'''find all corresponding y_hats'''
-    #for i in range(0, len(U)):
-    #    for j in range(0, len(matrixTestSet)):
-    #        y_hat.append(orthonormalProjection(U[i], matrixTestSet[j]))
-
-    # this process currently takes to long to the point my computer terminates it.
-    '''find all z_hats'''
-    #for i in range(0, len(y)):
-    #    for j in range(0, len(y_hat)):
-    #        z_hat.append(y[i] - y_hat[j])
-
-    #print(len(y_hat))
-
-
-
-
-
-
-
-
+    print("Number of correct guesses: {}".format(numCorrectGuess))
 
     return 0
 
