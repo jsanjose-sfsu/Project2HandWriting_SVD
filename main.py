@@ -182,7 +182,7 @@ def main():
     """For each test digit, compute the 10 y_hat vectors and the corresponding 10 z vectors."""
     #number of correct guesses with an adjustable tolerance
     numCorrectGuess = 0
-    tolerance = .07
+    tolerance = .05
     #for each test digit
     for i in range(0, len(matrixTestLabels)):
         z_Mag = []
