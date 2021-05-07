@@ -7,8 +7,7 @@ import matplotlib as mat
 def informationListConversion(set, labels):
     """
     This is for formatting our information into lists so we can
-    manipulate the data into matrices, DO NOT TOUCH; ask for johnsanjose
-    for explanation on how this works.
+    manipulate the data into matrices.
     :param set: this is the string-ified version of the set
     :param labels: this is the string-ified version of the labels
     :return: set and label.
@@ -40,8 +39,7 @@ def informationListConversion(set, labels):
 def matrixSetConversion(set):
     """
     This function creates a set of matrices based off of the
-    set file its been given. DO NOT TOUCH. Again, ask johnsanjose
-    for questions.
+    set file its been given. DO NOT TOUCH.
     :param set: Set list (a list of values from the set file).
     :return: 9 numpy matrices.
     """
@@ -66,8 +64,7 @@ def matrixSetConversion(set):
 
 def matrixLabelConversion(label):
     """
-    This function creates 1x400 column vectors from the label thats been passed in. Ask
-    jsanjose for details.
+    This function creates 1x400 column vectors from the label thats been passed in. A
     :param label: test label
     :return: 10 1x400 matrices.
     """
@@ -88,8 +85,7 @@ def matrixLabelConversion(label):
 def testConversion(setString, labelString):
     """
     Converts test set and test label into matrices to be processed. Again do not touch, assume that
-    this function returns matrices for the test set and the test label. Please ask jsanjose if changes
-    are needed.
+    this function returns matrices for the test set and the test labe.
     :param setString:
     :param labelString:
     :return: 2 numpy matrices corresponding to testSet (1000x400)and testLabels(1000X1).
@@ -141,6 +137,13 @@ def orthonormalProjection(U, y):
     return y_hat
 
 def approx_Equal(x, y, tolerance=0.001):
+    """
+    Determines if result is approximately the right answer.
+    :param x: z_norm
+    :param y: test label
+    :param tolerance:
+    :return: True if result is close enough with tolerance false if not
+    """
     return abs(x-y) <= 0.5 * tolerance * (x + y)
 
 def main():
