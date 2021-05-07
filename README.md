@@ -2,3 +2,5 @@
 
 Group 2: 
 John San Jose
+
+Jiaxin Yu
